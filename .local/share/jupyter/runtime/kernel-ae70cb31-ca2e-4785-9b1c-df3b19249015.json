@@ -1,0 +1,13 @@
+{
+  "shell_port": 37017,
+  "iopub_port": 47515,
+  "stdin_port": 48871,
+  "control_port": 45579,
+  "hb_port": 58331,
+  "ip": "127.0.0.1",
+  "key": "a9fcae58-2d82ede25f2c3df987f5e7f9",
+  "transport": "tcp",
+  "signature_scheme": "hmac-sha256",
+  "kernel_name": "python3",
+  "jupyter_session": "/home/jovyan/lab3/AirlineEDA.ipynb"
+}
