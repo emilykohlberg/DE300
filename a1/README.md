@@ -1,11 +1,14 @@
-Steps to run the code
-1. log into EC2
-2. run the commands:
-   aws sso login --sso-session nu-sso
-   sudo chmod 666 /var/run/docker.sock
-   docker run -p 8888:8888 -v ~/DE300:/home/jovyan/ my_jupyter
-3. go to a1/heart_disease_eda.ipynb
-4. run every cell in order EXCEPT the collapsed sections, which are:
-        DB Connection
-        Unused, but this how I would fill the missing values
-5. The explanations are in the file, and the cleaned data ends in a1/cleaned_data.csv
+# HW1
+
+## Instruction for deploying:
+
+   - log into EC2
+   - run the commands: 
+	aws sso login --sso-session nu-sso 
+	sudo chmod 666 /var/run/docker.sock 
+   - navigate to folder DE300/a1
+   - run the command: docker exec -it etl-container /bin/bash
+   - start the jupyter notebook by 'jupyter notebook --ip=0.0.0.0'.
+   - go to src/heart_disease_eda.ipynb
+   - run every cell in order EXCEPT the collapsed section: Unused, but this how I would fill the missing values
+   - The explanations are in the file, and the cleaned data is in the staging data folder
