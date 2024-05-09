@@ -21,7 +21,7 @@ RUN python -m venv /venv
 # Activate the virtual environment
 ENV PATH="/venv/bin:${PATH}"
 
-RUN pip install pandas sqlalchemy psycopg2-binary jupyter pyarrow matplotlib seaborn
+RUN pip install pandas sqlalchemy psycopg2-binary jupyter pyarrow matplotlib seaborn scikit-learn boto3
 
 
 #switch to non-root user
