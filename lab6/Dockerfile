@@ -19,7 +19,7 @@ RUN python3 -m venv demos
 # Activate the virtual environment and install necessary Python packages
 RUN /bin/bash -c "source demos/bin/activate && \
     pip install numpy venv-pack jupyter && \
-    pip install pyspark==3.4.0 --no-cache-dir && \
+    pip install pyspark==3.4.0 && \
     pip install jupyter && \
     demos/bin/venv-pack -o demos.tar.gz"
 

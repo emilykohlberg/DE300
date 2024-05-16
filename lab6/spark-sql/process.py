@@ -142,7 +142,7 @@ def main():
     data = join_with_US_gender(spark, data)
 
     data.show(5)
-    data.write.format('csv').option('header', 'true').mode('overwrite').save('saved.csv')
+    data.write.format('csv').option('header', 'true').mode('append').save('data')
 
     spark.stop()
 
