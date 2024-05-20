@@ -19,7 +19,7 @@ if __name__ == "__main__":
     print("Wrote all partitions to a directory")
     df = samples.toPandas()
     print("Made pandas")
-    df.to_csv('"s3://de300spring2024/emily_kohlberg/lab7/output.csv', index = False)
+    df.to_csv("s3://de300spring2024/emily_kohlberg/lab7/output.csv", index = False)
     print("Wrote file")
 
     spark.sparkContext.stop()
