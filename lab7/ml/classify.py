@@ -25,11 +25,7 @@ def read_data(spark: SparkSession) -> DataFrame:
     """
     
     # Read the Titanic CSV data into a DataFrame
-    titanic_data = spark.read \
-        .format("csv") \
-        .option("header", "true") \
-        .option("inferSchema", "true") \
-        .load(os.path.join(DATA_FOLDER,"*.csv"))
+    titanic_data = spark.read.csv("s3://de300spring2024/emily_kohlberg/lab7/data/data.csv", header = True, inferSchema = True)
 
     return titanic_data
 
