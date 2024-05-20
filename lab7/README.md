@@ -10,4 +10,19 @@
 
 4 The python script should print out the new AUC ROC, Report and analyze what you find (compared to w.o modification of 1,2 above)
 
+## Results
+The final results are 
 
+Area Under ROC Curve: 0.8948
+
+Selected Maximum Tree Depth: 6
+
+Selected Number of Trees: 250
+
+compared to the initial results of 
+
+Area Under ROC Curve: 0.9003
+
+Selected Maximum Tree Depth: 6
+
+The AUC ROC is slightly lower, so the max number of trees that was used before may have been higher, or the squared column decreased the accuracy of the model.
