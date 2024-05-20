@@ -111,7 +111,7 @@ def pipeline(data: DataFrame):
     # Set up the parameter grid for maximum tree depth
     paramGrid = ParamGridBuilder() \
         .addGrid(classifier.maxDepth, [2, 4, 6, 8, 10]) \
-        .addGrid(classifier.numTrees, [50, 100, 150]) \
+        .addGrid(classifier.numTrees, [150, 200, 250, 500]) \
         .build()
 
     # Set up the cross-validator
