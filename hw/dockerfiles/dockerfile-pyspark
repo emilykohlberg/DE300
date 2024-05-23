@@ -13,6 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Update the package lists, install apt-utils and other necessary packages
 RUN apt-get update && apt-get install -y \
     apt-utils \
+    openjdk-8-jdk-headless \
     python3.10-venv \
     python3-pip \
     && rm -rf /var/lib/apt/lists/*
