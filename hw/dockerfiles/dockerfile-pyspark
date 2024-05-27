@@ -13,7 +13,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Update the package lists, install apt-utils and other necessary packages
 RUN apt-get update && apt-get install -y \
     apt-utils \
-    openjdk-8-jdk-headless \
     python3.10-venv \
     python3-pip \
     && rm -rf /var/lib/apt/lists/*
@@ -28,7 +27,7 @@ ENV PATH="/tmp/demos/bin:$PATH"
 RUN /bin/bash -c "source demos/bin/activate && \
     pip install numpy venv-pack jupyter && \
     pip install pyspark==3.4.0 && \
-    pip install jupyter scrapy pandas sqlalchemy psycopg2-binary jupyter pyarrow matplotlib seaborn boto3 && \
+    pip install jupyter scrapy boto3 && \
     demos/bin/venv-pack -o demos.tar.gz"
 
 # Clean up unnecessary files and reset DEBIAN_FRONTEND
