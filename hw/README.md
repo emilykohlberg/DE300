@@ -26,3 +26,15 @@
     - simple imputation is commented out since I chose to use a more advanced method with the sklearn module
     - my final result is that RandomForestClassifier, with the hyperparameters specified in the jupyter notebook is the best classifier
 
+# HW3
+## Instructions for deploying:
+    - log into EC2 (Emily EC2)
+    - run the commands 'aws sso login --sso-session nu-sso' and 'sudo chmod 666 /var/run/docker.sock'
+    - paste aws credentials into the terminal
+    - navigate to the folder DE300/hw
+    - run 'bash hw3.sh' in the terminal
+    - this will create an EMR cluster and a step that runs the spark job
+    - The best model is LogisticRegression with metrics - AUC: 0.8853, Accuracy: 0.8118, Precision: 0.8118, Recall: 0.8118, F1-Score: 0.8118 The selected regularization parameter was 0.1.
+    - These results can be seen from the EMR job or in hw3.ipynb
+## To run the notebook (not necessary):
+    - If you want to run hw3.ipynb, run the commands 'docker restart spark-sql-container' and 'docker exec -it spark-sql-container /bin/bash' in the terminal and open 'http://localhost:8888/tree/hw3', find the file, and run every cell in the notebook

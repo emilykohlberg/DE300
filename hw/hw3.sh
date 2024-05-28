@@ -1,0 +1,14 @@
+aws emr create-cluster \
+ --name "Emily cluster" \
+ --log-uri "s3://aws-logs-549787090008-us-east-2/elasticmapreduce" \
+ --release-label "emr-6.10.0" \
+ --service-role "arn:aws:iam::549787090008:role/EMR_DefaultRole" \
+ --termination-protected \
+ --ec2-attributes '{"InstanceProfile":"EMR_EC2_DefaultRole","EmrManagedMasterSecurityGroup":"sg-0ca32774ad00ed999","EmrManagedSlaveSecurityGroup":"sg-01b1848377d321647","AdditionalMasterSecurityGroups":[],"AdditionalSlaveSecurityGroups":[],"SubnetId":"subnet-013b0c5bdd6fd3339"}' \
+ --applications Name=Spark Name=Zeppelin \
+ --instance-groups '[{"InstanceCount":2,"InstanceGroupType":"TASK","Name":"Task - 1","InstanceType":"m4.large","EbsConfiguration":{"EbsBlockDeviceConfigs":[{"VolumeSpecification":{"VolumeType":"gp2","SizeInGB":32},"VolumesPerInstance":1}]}},{"InstanceCount":3,"InstanceGroupType":"MASTER","Name":"Primary","InstanceType":"m4.large","EbsConfiguration":{"EbsBlockDeviceConfigs":[{"VolumeSpecification":{"VolumeType":"gp2","SizeInGB":32},"VolumesPerInstance":1}]}},{"InstanceCount":1,"InstanceGroupType":"CORE","Name":"Core","InstanceType":"m4.large","EbsConfiguration":{"EbsBlockDeviceConfigs":[{"VolumeSpecification":{"VolumeType":"gp2","SizeInGB":32},"VolumesPerInstance":1}]}}]' \
+ --bootstrap-actions '[{"Args":[],"Name":"emily bootstrap","Path":"s3://de300spring2024/emily_kohlberg/lab7/bootstrap_panda.sh"}]' \
+ --steps '[{"Name":"HW3","ActionOnFailure":"CANCEL_AND_WAIT","Jar":"command-runner.jar","Properties":"","Args":["spark-submit","--deploy-mode","cluster","--master","yarn","s3://de300spring2024/emily_kohlberg/hw/hw3_classify.py"],"Type":"CUSTOM_JAR"}]' \
+ --scale-down-behavior "TERMINATE_AT_TASK_COMPLETION" \
+ --auto-termination-policy '{"IdleTimeout":3600}' \
+ --region "us-east-2"
