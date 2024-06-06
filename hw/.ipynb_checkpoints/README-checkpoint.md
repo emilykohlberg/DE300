@@ -46,3 +46,4 @@
     - log into EC2 (Emily EC2)
     - use de300spring2024-airflow-demo MWAA
     - my DAG is Emily_HW4
+    - some spark tasks need to rerun because of limited memory, but they have all successfully run, which can be seen on the Emily_HW4 DAG on de300spring2024-airflow-demo

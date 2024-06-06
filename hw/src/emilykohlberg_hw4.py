@@ -13,14 +13,13 @@ from sqlalchemy import create_engine
 import subprocess
 from pyspark.sql import SparkSession
 
-def start_spark_func():
+def start_spark_func(spark_name):
+    print(spark_name)
     
     spark = SparkSession.builder \
-                        .appName("DataFrameConverter") \
-                        .config("spark.driver.memory", "60g") \
-                        .config("spark.executor.memory", "60g") \
-                        .config("spark.network.timeout", "800s") \
-                        .config("spark.executor.heartbeatInterval", "300s") \
+                        .appName(spark_name) \
+                        .config("spark.driver.memory", "6g") \
+                        .config("spark.executor.memory", "6g") \
                         .getOrCreate()
     return spark
 
@@ -57,7 +56,7 @@ default_args = {
     'owner': 'emilykohlberg',
     'depends_on_past': False,
     'start_date': days_ago(1),
-    'retries': 1,
+    'retries': 2,
 }
 
 def read_config_from_s3() -> dict:
@@ -169,13 +168,6 @@ def from_table_to_df(input_table_names: list[str], output_table_names: list[str]
 
                 print("table name:", table_name)
                 print("returned df:", df) 
-                
-                # Check if df is a pandas DataFrame
-                # if not isinstance(df, pd.DataFrame):
-                #     # Convert Spark DataFrame to Pandas DataFrame
-                #     from pyspark.sql import SparkSession
-                #     df = df.toPandas()
-                #     print("new pandas df", df)
                     
                 df.to_sql(table_name, conn, if_exists="replace", index=False)
                 print(f"Wrote to table {table_name}")
@@ -188,10 +180,10 @@ def from_table_to_df(input_table_names: list[str], output_table_names: list[str]
     return decorator
 
 
-def pandas_to_spark(dfs):
+def pandas_to_spark(dfs, spark_name):
     from pyspark.sql.types import StructType, StructField, StringType
 
-    spark = start_spark_func()
+    spark = start_spark_func(spark_name)
     
     spark_dfs = []
     for df in dfs:
@@ -218,7 +210,7 @@ def process_with_spark(func):
         # Check if dfs is a list of pandas DataFrames
         if all(isinstance(df, pd.DataFrame) for df in dfs):
             # Convert pandas DataFrames to Spark DataFrames
-            spark, spark_dfs = pandas_to_spark(dfs)
+            spark, spark_dfs = pandas_to_spark(dfs, func.__name__)
             
             # Pass the Spark DataFrames to the decorated function
             kwargs['spark'] = spark
@@ -227,12 +219,12 @@ def process_with_spark(func):
                 result = func(*args, **kwargs)
             finally:
                 # Convert Spark DataFrame back to Pandas DataFrame
-                pandas_result = {'dfs': [{"df": pair['df'].toPandas(), "table_name": pair["table_name"]} for pair in result['dfs']]}
+                result['dfs'] = [{"df": pair['df'].toPandas(), "table_name": pair["table_name"]} for pair in result['dfs']]
 
                 # Ensure Spark session is stopped even if an exception occurs
                 spark.stop()
             
-            return pandas_result
+            return result
         else:
             raise ValueError("dfs is not a list of pandas DataFrames")
     return wrapper
@@ -1008,6 +1000,7 @@ def lr_2(dfs):
     # Extract the Spark DataFrames
     if len(dfs) < 2:
         df = dfs[0]
+        print(df.columns)
     else:
         org_df = dfs[1]
         fe_df = dfs[0]
@@ -1062,6 +1055,8 @@ def lr_2(dfs):
 
     # Evaluate the model
     accuracy = evaluator.evaluate(predictions)
+
+    print("accuracy", accuracy)
 
     return accuracy
 
@@ -1120,6 +1115,7 @@ def svm_2(dfs):
     # Extract the Spark DataFrames
     if len(dfs) < 2:
         df = dfs[0]
+        print(df.columns)
     else:
         org_df = dfs[1]
         fe_df = dfs[0]
@@ -1162,6 +1158,8 @@ def svm_2(dfs):
 
     # Evaluate the model
     accuracy = evaluator.evaluate(predictions)
+
+    print("accuracy", accuracy)
 
     return accuracy
 
@@ -1291,7 +1289,6 @@ def high_risk_svm_1_func(**kwargs):
     """
 
     dfs = kwargs['dfs']
- 
     accuracy = svm_1(dfs)
 
     return {
@@ -1307,7 +1304,11 @@ def product_lr_2_func(**kwargs):
     Train logistic regression on product features.
     """
     dfs = kwargs['dfs']
+    print(dfs)
     accuracy = lr_2(dfs)
+
+    print("accuracy", accuracy)
+    
     return {
         "accuracy": accuracy,
         'dfs': []
@@ -1320,7 +1321,9 @@ def product_svm_2_func(**kwargs):
     Train SVM regression on product features.
     """
     dfs = kwargs['dfs']
+    print(dfs)
     accuracy = svm_2(dfs)
+    
     return {
         "accuracy": accuracy,
         'dfs': []
@@ -1336,8 +1339,8 @@ def production_lr_2_func(**kwargs):
     from pyspark.sql.types import StructType
 
     dfs = kwargs['dfs']
-
-    accuracy = lr_2(dfs)
+    print(dfs)
+    accuracy = lr_2(dfs)    
     return {
         "accuracy": accuracy,
         'dfs': []
@@ -1353,8 +1356,9 @@ def production_svm_2_func(**kwargs):
     from pyspark.sql.types import StructType
 
     dfs = kwargs['dfs']
-
+    print(dfs)
     accuracy = svm_2(dfs)
+    
     return {
         "accuracy": accuracy,
         'dfs': []
@@ -1367,6 +1371,7 @@ def high_risk_lr_2_func(**kwargs):
     Train logistic regression on max features.
     """
     dfs = kwargs['dfs']
+    print(dfs)
     accuracy = lr_2(dfs)
     return {
         "accuracy": accuracy,
@@ -1380,6 +1385,7 @@ def high_risk_svm_2_func(**kwargs):
     Train SVM regression on max features.
     """
     dfs = kwargs['dfs']
+    print(dfs)
     accuracy = svm_2(dfs)
     return {
         "accuracy": accuracy,
@@ -1404,6 +1410,7 @@ def decide_which_model(**kwargs):
     for model_type in ['high_risk_lr', 'product_lr', 'high_risk_svm', 'product_svm']:
         for version in ['_1', '_2']:
             task_id = model_type + version
+            print(task_id)
             accuracy = ti.xcom_pull(task_ids=task_id)['accuracy']
             accuracies[task_id] = accuracy
     for model_type in ['merge_lr', 'merge_svm']:
