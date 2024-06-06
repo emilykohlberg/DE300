@@ -1395,7 +1395,7 @@ def high_risk_svm_2_func(**kwargs):
 feature_operations = ["high_risk_lr_1", "high_risk_svm_1", "product_lr_1", "product_svm_1", "high_risk_lr_2", "high_risk_svm_2", "product_lr_2", "product_svm_2", "merge_lr", "merge_svm"] 
 
 def encode_task_id(feature_operation: str):
-    return f'{feature_type}_evaluation'
+    return f'{feature_operation}_evaluation'
 
 def decide_which_model(**kwargs):
     """
