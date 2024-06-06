@@ -13,6 +13,7 @@ port = '5432'  # Default port for PostgreSQL
 default_db = 'postgres'  # Default database you can connect to
 db_name = 'hw4'
 db_alchemy_driver = "postgresql+psycopg2"
+jdbc_driver= "org.postgresql.Driver" 
 
 [files]
 s3_bucket = "de300spring2024-emilykohlberg"
@@ -30,12 +31,10 @@ labels = "target"
 train_test_ratio = 0.1
 labels = "target"
 
-
-
 [ml]
-train_test_ratio = 0.2
+train_test_ratio = 0.1
 outliers_std_factor = 3
-labels = "Wine"
+labels = "target"
 tolerance = 0.01
 perturbation_std = 1.2
 max_perturbation_iterations = 50

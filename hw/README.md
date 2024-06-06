@@ -38,3 +38,11 @@
     - These results can be seen from the EMR job or in hw3.ipynb
 ## To run the notebook (not necessary):
     - If you want to run hw3.ipynb, run the commands 'docker restart spark-sql-container' and 'docker exec -it spark-sql-container /bin/bash' in the terminal and open 'http://localhost:8888/tree/hw3', find the file, and run every cell in the notebook
+
+
+# HW4
+## Instructions:
+
+    - log into EC2 (Emily EC2)
+    - use de300spring2024-airflow-demo MWAA
+    - my DAG is Emily_HW4
